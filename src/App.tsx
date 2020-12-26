@@ -23,7 +23,7 @@ function App({}: AppProps) {
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <br/>
+        <br />
         <MajorSuggestions />
       </header>
     </div>
@@ -36,53 +36,54 @@ interface IMajorSuggestionsChildrenProps {
 }
 
 class MajorSuggestionsUserInput extends React.Component<IMajorSuggestionsChildrenProps> {
-  constructor(props: { onInputChange: Function, userInput: string }) {
+  constructor(props: { onInputChange: Function; userInput: string }) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
   }
-  
+
   handleChange(e: any) {
     console.debug('MajorSuggestionsUserInput#handleChange', e, e.target.value);
-    
+
     this.props.onInputChange(e.target.value);
   }
-  
+
   render() {
     const value = this.props.userInput;
-    return (
-      <textarea
-        value={value}
-        onChange={this.handleChange}
-      />
-    )
+    return <textarea value={value} onChange={this.handleChange} />;
   }
 }
 
-class MajorSuggestionsOutput extends React.Component<IMajorSuggestionsChildrenProps & { dictionary: Dictionary }> {
+class MajorSuggestionsOutput extends React.Component<
+  IMajorSuggestionsChildrenProps & { dictionary: Dictionary }
+> {
   parseValue: Function;
-  
-  constructor(props: { onInputChange: Function, userInput: string, dictionary: Dictionary }) {
+
+  constructor(props: {
+    onInputChange: Function;
+    userInput: string;
+    dictionary: Dictionary;
+  }) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.parseValue = parser(this.props.dictionary);
   }
-  
-  handleChange(e: any) {    
-    console.debug('MajorSuggestionsOutput#handleChange', e, e.target.value)
+
+  handleChange(e: any) {
+    console.debug('MajorSuggestionsOutput#handleChange', e, e.target.value);
 
     this.props.onInputChange(e.target.value);
   }
-  
+
   render() {
     const value: string = this.props.userInput;
     const parsedValue = value ? this.parseValue(value) : '';
     return (
-      <textarea 
+      <textarea
         readOnly
         value={parsedValue} // todo parse arrays
         // onChange={this.handleChange}
       />
-    )
+    );
   }
 }
 
@@ -90,7 +91,7 @@ interface IMajorSuggestionsState {
   userInput: string;
 }
 
-class MajorSuggestions extends React.Component<{}, IMajorSuggestionsState> {  
+class MajorSuggestions extends React.Component<{}, IMajorSuggestionsState> {
   dictionary: Dictionary;
   constructor(props: any) {
     super(props);
@@ -101,37 +102,37 @@ class MajorSuggestions extends React.Component<{}, IMajorSuggestionsState> {
     };
     this.dictionary = new Dictionary();
   }
-  
-  onInputChange(userInput: string) {
-    console.debug('MajorSuggestions#onInputChange', userInput)
-    this.setState({userInput});
-  }
-  
-  changeOutput(userInput: string) {
-    console.debug('MajorSuggestions#changeOutput', userInput)
 
-    this.dictionary.updateForUserInput(userInput)
+  onInputChange(userInput: string) {
+    console.debug('MajorSuggestions#onInputChange', userInput);
+    this.setState({ userInput });
+  }
+
+  changeOutput(userInput: string) {
+    console.debug('MajorSuggestions#changeOutput', userInput);
+
+    this.dictionary.updateForUserInput(userInput);
     // this.setState({
     //   userInput,
     // });
   }
-  
+
   render() {
     const userInput: string = this.state.userInput;
     return (
       <div>
-        <MajorSuggestionsUserInput 
+        <MajorSuggestionsUserInput
           userInput={userInput}
           onInputChange={this.onInputChange}
         />
-        <br/>
-        <MajorSuggestionsOutput 
+        <br />
+        <MajorSuggestionsOutput
           userInput={userInput}
           onInputChange={this.changeOutput}
           dictionary={this.dictionary}
         />
       </div>
-    )
+    );
   }
 }
 

@@ -7,7 +7,7 @@
   - Expanding on this: the dictionary words I currently have are too inclusive! Most of these words I've never heard of, and I'm a native english speaker. I need to get a "most used" dictionary setup!
   - [ ] Add words' properties, like "adjective" or "noun", for different scoring and weighting. Basic example, the last word would always be a noun, and words leading up to it could be adjectives. Maybe add verbs in once there are at least 2 nouns.
 1. [x] Get a real dictionary setup. I could import it from an API somewhere, maybe, or add a .txt file to the repository. Not sure.
-1. [ ] Learn about Typescript and React tools, like linters.
+1. [x] Learn about Typescript and React tools, like linters.
 1. [ ] Add background about the major system on to the web page. ~My instinct is to do this first, but it's not what's important, so I need to restrain myself from making some pretty-but-unfunctional app...~
 1. [ ] Probably the last priority would be to prettify the CSS/page layout.
 1. [x] Code splitting out of one big `App.tsx`

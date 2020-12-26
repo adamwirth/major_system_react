@@ -15,24 +15,24 @@ import t from './mapping_t';
 import v from './mapping_v';
 
 type DictionaryMap = {
-    [key: string]: string[],
-}
+  [key: string]: string[];
+};
 
 const DictionaryMapping: DictionaryMap = {
-    b,
-    ch,
-    d,
-    f,
-    g,
-    k,
-    l,
-    m,
-    n,
-    p,
-    r,
-    s,
-    sh,
-    t,
-    v,
-}
-export default DictionaryMapping
+  b,
+  ch,
+  d,
+  f,
+  g,
+  k,
+  l,
+  m,
+  n,
+  p,
+  r,
+  s,
+  sh,
+  t,
+  v,
+};
+export default DictionaryMapping;
