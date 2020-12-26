@@ -8,6 +8,13 @@ module.exports = {
     '@snowpack/plugin-react-refresh',
     '@snowpack/plugin-dotenv',
     '@snowpack/plugin-typescript',
+    '@snowpack/plugin-webpack',
+    // {
+    //   extendConfig: (config) => {
+    //     config.plugins.push(/* ... */);
+    //     return config;
+    //   },
+    // },
   ],
   install: [
     /* ... */
@@ -16,7 +23,7 @@ module.exports = {
     /* ... */
   },
   devOptions: {
-    /* ... */
+    output: 'stream', // default: "dashboard"
   },
   buildOptions: {
     /* ... */

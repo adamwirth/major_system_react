@@ -1,4 +1,8 @@
-export const MajorSystemMappings: Readonly<any> = {
+type MajorSystemMappings = {
+    readonly [key: number]: string[],
+}
+
+export const MajorSystemMappings: MajorSystemMappings = {
     0: ['S'],
     1: ['T', 'D'],
     2: ['N'],

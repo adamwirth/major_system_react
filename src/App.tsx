@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
+
 import logo from './logo.svg';
 import './App.css';
-import { MajorSystemMappings } from './Stores';
+import Dictionary from './Dictionary';
+import parser from './Parser';
 
 interface AppProps {}
 
 function App({}: AppProps) {
   // Create the count state.
-  const [count, setCount] = useState(0);
+  // const [count, setCount] = useState(0);
   // Create the counter (+1 every second).
-  useEffect(() => {
-    const timer = setTimeout(() => setCount(count + 1), 1000);
-    return () => clearTimeout(timer);
-  }, [count, setCount]);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => setCount(count + 1), 1000);
+  //   return () => clearTimeout(timer);
+  // }, [count, setCount]);
   // Return the App component.
   return (
     <div className="App">
@@ -20,9 +22,6 @@ function App({}: AppProps) {
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <p>
-          Page has been open for <code>{count}</code> seconds.
         </p>
         <br/>
         <MajorSuggestions />
@@ -43,6 +42,8 @@ class MajorSuggestionsUserInput extends React.Component<IMajorSuggestionsChildre
   }
   
   handleChange(e: any) {
+    console.debug('MajorSuggestionsUserInput#handleChange', e, e.target.value);
+    
     this.props.onInputChange(e.target.value);
   }
   
@@ -57,40 +58,29 @@ class MajorSuggestionsUserInput extends React.Component<IMajorSuggestionsChildre
   }
 }
 
-class MajorSuggestionsOutput extends React.Component<IMajorSuggestionsChildrenProps> {
-  constructor(props: { onInputChange: Function, userInput: string }) {
+class MajorSuggestionsOutput extends React.Component<IMajorSuggestionsChildrenProps & { dictionary: Dictionary }> {
+  parseValue: Function;
+  
+  constructor(props: { onInputChange: Function, userInput: string, dictionary: Dictionary }) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.parseValue = this.parseValue.bind(this);
+    this.parseValue = parser(this.props.dictionary);
   }
   
-  handleChange(e: any) {
+  handleChange(e: any) {    
+    console.debug('MajorSuggestionsOutput#handleChange', e, e.target.value)
+
     this.props.onInputChange(e.target.value);
-  }
-  
-  parseValue(input: string) {
-    return [...input].map(value => {
-      const intValue = parseInt(value);
-      if (intValue === NaN) return ''
-      const chosenMapping: string[] = MajorSystemMappings[intValue]
-      let chosenIdx
-      if (chosenMapping.length === 1) {
-        chosenIdx = 0 
-      } else {
-        chosenIdx = Math.floor(Math.random() * 2)
-      }
-      return chosenMapping[chosenIdx]
-    }).join('')
   }
   
   render() {
     const value: string = this.props.userInput;
-    const parsedValue = this.parseValue(value);
+    const parsedValue = value ? this.parseValue(value) : '';
     return (
       <textarea 
         readOnly
-        value={parsedValue}
-        onChange={this.handleChange}
+        value={parsedValue} // todo parse arrays
+        // onChange={this.handleChange}
       />
     )
   }
@@ -100,22 +90,30 @@ interface IMajorSuggestionsState {
   userInput: string;
 }
 
-class MajorSuggestions extends React.Component<{}, IMajorSuggestionsState> {
+class MajorSuggestions extends React.Component<{}, IMajorSuggestionsState> {  
+  dictionary: Dictionary;
   constructor(props: any) {
     super(props);
     this.onInputChange = this.onInputChange.bind(this);
     this.changeOutput = this.changeOutput.bind(this);
-    this.state = {userInput: ''};
+    this.state = {
+      userInput: '',
+    };
+    this.dictionary = new Dictionary();
   }
   
   onInputChange(userInput: string) {
+    console.debug('MajorSuggestions#onInputChange', userInput)
     this.setState({userInput});
-    console.log('MajorSuggestions#onInputChange', this.state, userInput);
   }
   
   changeOutput(userInput: string) {
-    this.setState({userInput});
-    console.log('MajorSuggestions#changeOutput', this.state, userInput);
+    console.debug('MajorSuggestions#changeOutput', userInput)
+
+    this.dictionary.updateForUserInput(userInput)
+    // this.setState({
+    //   userInput,
+    // });
   }
   
   render() {
@@ -130,11 +128,11 @@ class MajorSuggestions extends React.Component<{}, IMajorSuggestionsState> {
         <MajorSuggestionsOutput 
           userInput={userInput}
           onInputChange={this.changeOutput}
+          dictionary={this.dictionary}
         />
       </div>
     )
   }
 }
-
 
 export default App;
