@@ -17,9 +17,10 @@ function Parser(dictionary: Dictionary) {
   };
 
   const parseValue = (input: string) => {
+    console.debug('parseValue entered', input);
     const characters = mapNumbers(input);
     const suggestedWords = mapCharacters(characters);
-    console.debug('parseValue', input, characters, suggestedWords);
+    console.debug('parseValue leaving', input, characters, suggestedWords);
     return suggestedWords;
   };
 

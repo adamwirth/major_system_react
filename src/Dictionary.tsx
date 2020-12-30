@@ -1,4 +1,5 @@
 import trie from 'trie-prefix-tree';
+import parser from './Parser';
 
 import { assertIsDefined } from './Utils';
 import dictionariesHub from './dictionaries/dictionaries';
@@ -9,6 +10,7 @@ export type dictionaries = {
 
 class Dictionary {
   dictionaries: dictionaries; // todo look into how people mention imports (that dont have .d.ts files)
+  parse: Function;
 
   constructor() {
     this.initializeDict = this.initializeDict.bind(this);
@@ -17,6 +19,7 @@ class Dictionary {
 
     // todo refactor to use state?
     this.dictionaries = {};
+    this.parse = parser(this);
   }
 
   // TODO prefix tree for each first character(s)
@@ -51,6 +54,10 @@ class Dictionary {
 
   updateForUserInput(prefix: string) {
     return this.initializeDict(prefix);
+  }
+
+  getParse() {
+    return this.parse;
   }
 }
 
