@@ -13,6 +13,9 @@ major_systems_mappings = {
     9: ['P', 'B'],
 }
 
+nested_key = 'commonWords'
+try_nested_key = lambda json: json.get(nested_key, json)
+
 # 1 json per number's array entry in major_systems_mapping
 # right now I'm exporting silly json that looks like { 0: [...] } with no additional entries
 # realistically I should turn these into prefix trees in python, but im interested in the memory issues over in js (for now)
@@ -20,10 +23,11 @@ def write_smaller_json_file(mappings, giant_json):
     for mapping in mappings:
         m = mapping.lower()
         filename = './src/mapping_' + m + '.json'
+        print(f'using nested_key {nested_key} for json...')
         with open(filename, 'w') as small_file:
             small_file.seek(0) # overwrite if needed
             print(f'writing for {m}..')
-            new_json = filter(lambda v: v.startswith(m), giant_json)
+            new_json = filter(lambda v: v.startswith(m), try_nested_key(giant_json))
             new_json = list(new_json)
             json.dump({ m: new_json }, small_file)
             
@@ -32,11 +36,12 @@ def write_smaller_json_file(mappings, giant_json):
 def write_smaller_js_exports_files(mappings, giant_json):
     for mapping in mappings:
         m = mapping.lower()
-        filename = './src/mapping_' + m + '.ts'
+        filename = './src/dictionaries/mapping_' + m + '.ts'
         with open(filename, 'w') as small_file:
             small_file.seek(0) # overwrite if needed
-            print(f'writing for {m}..')
-            big_array = list(filter(lambda v: v.startswith(m), giant_json))
+            print(f'writing for {m} at {filename} (with nested key ({nested_key})..')
+            big_array = list(filter(lambda v: v.startswith(m), try_nested_key(giant_json)))
+
             small_file.write(f'export default {big_array};')
             
             
