@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 
 import './App.css';
 import Dictionary from './Dictionary';
@@ -6,21 +6,16 @@ import Dictionary from './Dictionary';
 interface AppProps {}
 
 function App({}: AppProps) {
-  return <MajorSuggestionsProvider></MajorSuggestionsProvider>;
+  return <MajorSuggestionsProvider />;
 }
 
 export const MajorSuggestionsUserInput = (props: any) => {
-  const { userInput, setUserInput } = props;
-  const onUserInputChange = (e: any) => {
-    setUserInput(e.target.value);
-  };
-  console.debug('MajorSuggestionsInput#beforeRender');
   return (
     <div className="box">
       <span>In</span>
       <textarea
-        value={userInput}
-        onChange={onUserInputChange} // todo pass e.target.value thing
+        value={props.userInput}
+        onChange={(e) => props.onInputChange(e.target.value)}
         cols={50} // todo extract
         rows={3}
         spellCheck={false}
@@ -31,16 +26,11 @@ export const MajorSuggestionsUserInput = (props: any) => {
 };
 
 export const MajorSuggestionsOutput = (props: any) => {
-  const { dictionary, userInput } = props;
-  const parseValue = dictionary.getParse();
-
-  console.debug('MajorSuggestionsOutput#beforeRender');
-  const parsedValue = parseValue(userInput);
   return (
     <div className="box">
       <span>Out</span>
       <textarea
-        value={parsedValue}
+        value={props.parsedValue}
         cols={50} // todo extract
         rows={3}
         spellCheck={false}
@@ -51,43 +41,44 @@ export const MajorSuggestionsOutput = (props: any) => {
 };
 
 interface IMajorSuggestionsState {
-  dictionary: Dictionary;
   userInput: string;
-  setUserInput: any;
+  parsedValue: string;
 }
 
-export class MajorSuggestionsProvider extends React.Component<
+class MajorSuggestionsProvider extends React.Component<
   {},
   IMajorSuggestionsState
 > {
+  dictionary: Dictionary;
+  parseValue: any;
+
   constructor(props: any) {
     super(props);
+    this.setUserInput = this.setUserInput.bind(this);
 
-    const setUserInput = (userInput: string) => {
-      console.debug('MajorSuggestions#setUserInput', userInput);
-
-      this.setState({ userInput });
-    };
+    this.dictionary = new Dictionary();
+    this.parseValue = this.dictionary.getParseValue();
 
     this.state = {
-      dictionary: new Dictionary(),
       userInput: '',
-      setUserInput,
+      parsedValue: '',
     };
   }
 
+  setUserInput(userInput: string) {
+    console.debug('MajorSuggestions#setUserInput', userInput);
+    this.setState({
+      userInput,
+      parsedValue: this.parseValue(userInput),
+    });
+  }
+
   render() {
-    const userInput = this.state.userInput;
     return (
       <div>
-        <MajorSuggestionsUserInput
-          userInput={userInput}
-          setUserInput={this.state.setUserInput}
-        />
-        <MajorSuggestionsOutput
-          dictionary={this.state.dictionary}
-          userInput={userInput}
-        />
+        <MajorSuggestionsUserInput onInputChange={this.setUserInput} />
+        <br />
+        <MajorSuggestionsOutput parsedValue={this.state.parsedValue} />
       </div>
     );
   }

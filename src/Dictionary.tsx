@@ -10,16 +10,15 @@ export type dictionaries = {
 
 class Dictionary {
   dictionaries: dictionaries; // todo look into how people mention imports (that dont have .d.ts files)
-  parse: Function;
+  parseValue: any;
 
   constructor() {
     this.initializeDict = this.initializeDict.bind(this);
-    this.getWordsFromNumbers = this.getWordsFromNumbers.bind(this);
-    this.updateForUserInput = this.updateForUserInput.bind(this);
+    this.getWordFromChar = this.getWordFromChar.bind(this);
 
     // todo refactor to use state?
     this.dictionaries = {};
-    this.parse = parser(this);
+    this.parseValue = parser(this);
   }
 
   // TODO prefix tree for each first character(s)
@@ -27,39 +26,25 @@ class Dictionary {
   initializeDict(prefix: string) {
     const lowercasePrefix = prefix.toLowerCase();
     // memoize
-    if (this.dictionaries[lowercasePrefix])
+    if (this.dictionaries[lowercasePrefix]) {
       return this.dictionaries[lowercasePrefix];
+    }
     const dictionaryArray = dictionariesHub[lowercasePrefix];
     assertIsDefined(dictionaryArray); // todo remove eventually, this has helped define some bugs so far though
     console.debug('after', dictionaryArray);
+
     this.dictionaries[lowercasePrefix] = trie(dictionaryArray); // todo useMemo stuff?
     console.debug('after2');
+
     return this.dictionaries[lowercasePrefix];
   }
 
-  getWordsFromNumbers(prefixes: string[]) {
-    console.debug('doing getWordsFromNumbers with', ...prefixes);
-
-    const words: string[] = [];
-    for (const prefix of prefixes) {
-      if (prefix) {
-        // todo this logic is tricky here...
-        console.debug('getWordsFromNumbers', prefix);
-        const dictionary = this.initializeDict(prefix);
-        console.debug('after3');
-        words.push(dictionary.getRandomWordWithPrefix(prefix));
-        console.debug('after4');
-      }
-    }
-    return words;
+  getWordFromChar(char: string) {
+    return this.initializeDict(char).getRandomWordWithPrefix(char);
   }
 
-  updateForUserInput(prefix: string) {
-    return this.initializeDict(prefix);
-  }
-
-  getParse() {
-    return this.parse;
+  getParseValue() {
+    return this.parseValue;
   }
 }
 
