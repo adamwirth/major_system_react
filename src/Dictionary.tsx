@@ -14,7 +14,7 @@ class Dictionary {
 
   constructor() {
     this.initializeDict = this.initializeDict.bind(this);
-    this.getWordsFromNumbers = this.getWordsFromNumbers.bind(this); // todo am i messing these up somehow? because im seeing double loggings
+    this.getWordsFromNumbers = this.getWordsFromNumbers.bind(this);
     this.updateForUserInput = this.updateForUserInput.bind(this);
 
     // todo refactor to use state?
@@ -23,15 +23,16 @@ class Dictionary {
   }
 
   // TODO prefix tree for each first character(s)
+  // todo I don't love the naming convention I'm currently using on this
   initializeDict(prefix: string) {
     const lowercasePrefix = prefix.toLowerCase();
     // memoize
     if (this.dictionaries[lowercasePrefix])
       return this.dictionaries[lowercasePrefix];
     const dictionaryArray = dictionariesHub[lowercasePrefix];
-    assertIsDefined(dictionaryArray);
+    assertIsDefined(dictionaryArray); // todo remove eventually, this has helped define some bugs so far though
     console.debug('after', dictionaryArray);
-    this.dictionaries[lowercasePrefix] = trie(dictionaryArray); // todo setstate + components?
+    this.dictionaries[lowercasePrefix] = trie(dictionaryArray); // todo useMemo stuff?
     console.debug('after2');
     return this.dictionaries[lowercasePrefix];
   }
@@ -42,6 +43,7 @@ class Dictionary {
     const words: string[] = [];
     for (const prefix of prefixes) {
       if (prefix) {
+        // todo this logic is tricky here...
         console.debug('getWordsFromNumbers', prefix);
         const dictionary = this.initializeDict(prefix);
         console.debug('after3');

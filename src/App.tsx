@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 
 import './App.css';
 import Dictionary from './Dictionary';
@@ -6,27 +6,15 @@ import Dictionary from './Dictionary';
 interface AppProps {}
 
 function App({}: AppProps) {
-  return (
-    <MajorSuggestionsContextProvider>
-      <MajorSuggestionsUserInput />
-      <MajorSuggestionsOutput />
-    </MajorSuggestionsContextProvider>
-  );
+  return <MajorSuggestionsProvider></MajorSuggestionsProvider>;
 }
 
-const defaultContext = {
-  dictionary: new Dictionary(),
-  userInput: '',
-  setUserInput: (e: any) => {},
-};
-
-const UserInputContext = React.createContext(defaultContext);
-
 export const MajorSuggestionsUserInput = (props: any) => {
-  const { userInput, setUserInput } = useContext(UserInputContext);
+  const { userInput, setUserInput } = props;
   const onUserInputChange = (e: any) => {
     setUserInput(e.target.value);
   };
+  console.debug('MajorSuggestionsInput#beforeRender');
   return (
     <div className="box">
       <span>In</span>
@@ -43,7 +31,7 @@ export const MajorSuggestionsUserInput = (props: any) => {
 };
 
 export const MajorSuggestionsOutput = (props: any) => {
-  const { dictionary, userInput } = useContext(UserInputContext);
+  const { dictionary, userInput } = props;
   const parseValue = dictionary.getParse();
 
   console.debug('MajorSuggestionsOutput#beforeRender');
@@ -53,7 +41,6 @@ export const MajorSuggestionsOutput = (props: any) => {
       <span>Out</span>
       <textarea
         value={parsedValue}
-        onChange={(e) => dictionary.updateForUserInput(e.target.value)} // todo pass e.target.value thing
         cols={50} // todo extract
         rows={3}
         spellCheck={false}
@@ -63,27 +50,47 @@ export const MajorSuggestionsOutput = (props: any) => {
   );
 };
 
-export const MajorSuggestionsContextProvider = (props: any) => {
-  const setUserInput = (userInput: string) => {
-    console.debug('MajorSuggestions#setUserInput', userInput);
+interface IMajorSuggestionsState {
+  dictionary: Dictionary;
+  userInput: string;
+  setUserInput: any;
+}
 
-    setState({
-      ...state,
-      userInput,
-    });
-  };
+export class MajorSuggestionsProvider extends React.Component<
+  {},
+  IMajorSuggestionsState
+> {
+  constructor(props: any) {
+    super(props);
 
-  const initialState = {
-    ...defaultContext,
-    setUserInput,
-  };
+    const setUserInput = (userInput: string) => {
+      console.debug('MajorSuggestions#setUserInput', userInput);
 
-  const [state, setState] = useState(initialState);
-  return (
-    <UserInputContext.Provider value={state}>
-      {props.children}
-    </UserInputContext.Provider>
-  );
-};
+      this.setState({ userInput });
+    };
+
+    this.state = {
+      dictionary: new Dictionary(),
+      userInput: '',
+      setUserInput,
+    };
+  }
+
+  render() {
+    const userInput = this.state.userInput;
+    return (
+      <div>
+        <MajorSuggestionsUserInput
+          userInput={userInput}
+          setUserInput={this.state.setUserInput}
+        />
+        <MajorSuggestionsOutput
+          dictionary={this.state.dictionary}
+          userInput={userInput}
+        />
+      </div>
+    );
+  }
+}
 
 export default App;
