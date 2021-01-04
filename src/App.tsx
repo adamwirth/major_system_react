@@ -1,36 +1,32 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import './App.css';
 import Dictionary from './Dictionary';
 
-interface AppProps {}
-
-function App({}: AppProps) {
-  return <MajorSuggestionsProvider />;
-}
-
-export const MajorSuggestionsUserInput = (props: any) => {
+// todo bring to own files
+export const MajorSuggestionsUserInput = (props: any): ReactNode => {
+  const { onInputChange, userInput } = props;
   return (
     <div className="box">
       <span>In</span>
       <textarea
-        value={props.userInput}
-        onChange={(e) => props.onInputChange(e.target.value)}
+        value={userInput}
+        onChange={(e) => onInputChange(e.target.value)}
         cols={50} // todo extract
         rows={3}
         spellCheck={false}
-        autoFocus
       />
     </div>
   );
 };
 
-export const MajorSuggestionsOutput = (props: any) => {
+export const MajorSuggestionsOutput = (props: any): ReactNode => {
+  const { parsedValue } = props;
   return (
     <div className="box">
       <span>Out</span>
       <textarea
-        value={props.parsedValue}
+        value={parsedValue}
         cols={50} // todo extract
         rows={3}
         spellCheck={false}
@@ -45,11 +41,12 @@ interface IMajorSuggestionsState {
   parsedValue: string;
 }
 
-class MajorSuggestionsProvider extends React.Component<
-  {},
+class App extends React.Component<
+  Record<string, never>,
   IMajorSuggestionsState
 > {
   dictionary: Dictionary;
+
   parseValue: any;
 
   constructor(props: any) {
@@ -65,7 +62,7 @@ class MajorSuggestionsProvider extends React.Component<
     };
   }
 
-  setUserInput(userInput: string) {
+  setUserInput(userInput: string): void {
     console.debug('MajorSuggestions#setUserInput', userInput);
     this.setState({
       userInput,
@@ -73,12 +70,13 @@ class MajorSuggestionsProvider extends React.Component<
     });
   }
 
-  render() {
+  render(): ReactNode {
+    const { parsedValue } = this.state;
     return (
       <div>
         <MajorSuggestionsUserInput onInputChange={this.setUserInput} />
         <br />
-        <MajorSuggestionsOutput parsedValue={this.state.parsedValue} />
+        <MajorSuggestionsOutput parsedValue={parsedValue} />
       </div>
     );
   }

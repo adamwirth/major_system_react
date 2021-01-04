@@ -1,8 +1,8 @@
-type MajorSystemMappings = {
+type MajorSystemMappingsType = {
   readonly [key: number]: string[];
 };
 
-export const MajorSystemMappings: MajorSystemMappings = {
+const MajorSystemMappings: MajorSystemMappingsType = {
   0: ['S'],
   1: ['T', 'D'],
   2: ['N'],
@@ -14,3 +14,5 @@ export const MajorSystemMappings: MajorSystemMappings = {
   8: ['F', 'V'],
   9: ['P', 'B'],
 };
+
+export default MajorSystemMappings;

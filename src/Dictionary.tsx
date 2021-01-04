@@ -4,13 +4,14 @@ import parser from './Parser';
 import { assertIsDefined } from './Utils';
 import dictionariesHub from './dictionaries/dictionaries';
 
-export type dictionaries = {
+export type DictionaryType = {
   [key: string]: undefined | typeof trie | any; // todo "typeof trie" declaration wasnt working
 };
 
 class Dictionary {
-  dictionaries: dictionaries; // todo look into how people mention imports (that dont have .d.ts files)
-  parseValue: any;
+  dictionaries: DictionaryType;
+
+  parseValue: (input: string) => string;
 
   constructor() {
     this.initializeDict = this.initializeDict.bind(this);
@@ -23,14 +24,15 @@ class Dictionary {
 
   // TODO prefix tree for each first character(s)
   // todo I don't love the naming convention I'm currently using on this
-  initializeDict(prefix: string) {
+  initializeDict(prefix: string): DictionaryType[string] {
     const lowercasePrefix = prefix.toLowerCase();
     // memoize
     if (this.dictionaries[lowercasePrefix]) {
       return this.dictionaries[lowercasePrefix];
     }
     const dictionaryArray = dictionariesHub[lowercasePrefix];
-    assertIsDefined(dictionaryArray); // todo remove eventually, this has helped define some bugs so far though
+    // todo remove eventually, this has helped define some bugs so far though
+    assertIsDefined(dictionaryArray);
     console.debug('after', dictionaryArray);
 
     this.dictionaries[lowercasePrefix] = trie(dictionaryArray); // todo useMemo stuff?
@@ -39,11 +41,11 @@ class Dictionary {
     return this.dictionaries[lowercasePrefix];
   }
 
-  getWordFromChar(char: string) {
+  getWordFromChar(char: string): string {
     return this.initializeDict(char).getRandomWordWithPrefix(char);
   }
 
-  getParseValue() {
+  getParseValue(): (input: string) => string {
     return this.parseValue;
   }
 }
