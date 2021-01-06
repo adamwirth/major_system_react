@@ -20,7 +20,7 @@ body {
   flex: 1 1 0;
 }
 
-.box > span {
+.box > label {
   font-family: monospace;
   margin-right: 10px;
   flex: 1 2 0;

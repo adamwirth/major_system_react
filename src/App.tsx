@@ -1,64 +1,92 @@
-import React, { ReactNode } from 'react';
+import React, { ReactElement } from 'react';
 
 import './App.css';
 import Dictionary from './Dictionary';
 
-// todo bring to own files
-export const MajorSuggestionsUserInput = (props: any): ReactNode => {
-  const { onInputChange, userInput } = props;
-  return (
-    <div className="box">
-      <span>In</span>
-      <textarea
-        value={userInput}
-        onChange={(e) => onInputChange(e.target.value)}
-        cols={50} // todo extract
-        rows={3}
-        spellCheck={false}
-      />
-    </div>
-  );
-};
+interface IMajorSuggestionsInputState {
+  userInput: string;
+  onInputChange: (userInput: string) => void;
+}
 
-export const MajorSuggestionsOutput = (props: any): ReactNode => {
-  const { parsedValue } = props;
-  return (
-    <div className="box">
-      <span>Out</span>
-      <textarea
-        value={parsedValue}
-        cols={50} // todo extract
-        rows={3}
-        spellCheck={false}
-        readOnly
-      />
-    </div>
-  );
-};
+// todo bring to own file
+export class MajorSuggestionsUserInput extends React.Component<IMajorSuggestionsInputState> {
+  constructor(props: IMajorSuggestionsInputState) {
+    super(props);
+    this.changeInput = this.changeInput.bind(this);
+  }
+
+  changeInput(e: React.ChangeEvent<HTMLTextAreaElement>): void {
+    e.preventDefault();
+    this.props.onInputChange(e.target.value);
+  }
+
+  render(): ReactElement {
+    const { userInput } = this.props;
+    return (
+      <div className="box">
+        <label htmlFor="in">In</label>
+        <textarea
+          id="in"
+          value={userInput}
+          onChange={this.changeInput}
+          cols={50} // todo extract
+          rows={3}
+          spellCheck={false}
+        />
+      </div>
+    );
+  }
+}
+
+interface IMajorSuggestionsOutputState {
+  userInput: string;
+}
+
+// todo bring to own file
+export class MajorSuggestionsOutput extends React.Component<IMajorSuggestionsOutputState> {
+  dictionary: Dictionary;
+
+  parseValue: (input: string) => string;
+
+  constructor(props: IMajorSuggestionsOutputState) {
+    super(props);
+
+    this.dictionary = new Dictionary();
+    this.parseValue = this.dictionary.getParseValue();
+  }
+
+  render(): ReactElement {
+    const parsedValue = this.parseValue(this.props.userInput);
+    return (
+      <div className="box">
+        <label htmlFor="out">Out</label>
+        <textarea
+          id="out"
+          value={parsedValue}
+          cols={50} // todo extract
+          rows={3}
+          spellCheck={false}
+          readOnly
+        />
+      </div>
+    );
+  }
+}
 
 interface IMajorSuggestionsState {
   userInput: string;
-  parsedValue: string;
 }
 
 class App extends React.Component<
   Record<string, never>,
   IMajorSuggestionsState
 > {
-  dictionary: Dictionary;
-
-  parseValue: any;
-
-  constructor(props: any) {
+  constructor(props: Record<string, never>) {
     super(props);
     this.setUserInput = this.setUserInput.bind(this);
 
-    this.dictionary = new Dictionary();
-    this.parseValue = this.dictionary.getParseValue();
-
     this.state = {
       userInput: '',
-      parsedValue: '',
     };
   }
 
@@ -66,17 +94,18 @@ class App extends React.Component<
     console.debug('MajorSuggestions#setUserInput', userInput);
     this.setState({
       userInput,
-      parsedValue: this.parseValue(userInput),
     });
   }
 
-  render(): ReactNode {
-    const { parsedValue } = this.state;
+  render(): ReactElement {
     return (
       <div>
-        <MajorSuggestionsUserInput onInputChange={this.setUserInput} />
+        <MajorSuggestionsUserInput
+          userInput={this.state.userInput}
+          onInputChange={this.setUserInput}
+        />
         <br />
-        <MajorSuggestionsOutput parsedValue={parsedValue} />
+        <MajorSuggestionsOutput userInput={this.state.userInput} />
       </div>
     );
   }
