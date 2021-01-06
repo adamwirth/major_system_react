@@ -27,6 +27,7 @@ export class MajorSuggestionsUserInput extends React.Component<IMajorSuggestions
         <label htmlFor="in">In</label>
         <textarea
           id="in"
+          name="in"
           value={userInput}
           onChange={this.changeInput}
           cols={50} // todo extract
@@ -43,35 +44,28 @@ interface IMajorSuggestionsOutputState {
 }
 
 // todo bring to own file
-export class MajorSuggestionsOutput extends React.Component<IMajorSuggestionsOutputState> {
-  dictionary: Dictionary;
+export const MajorSuggestionsOutput = (
+  props: IMajorSuggestionsOutputState,
+): ReactElement => {
+  const dictionary = new Dictionary();
+  const parseValue = dictionary.getParseValue();
 
-  parseValue: (input: string) => string;
-
-  constructor(props: IMajorSuggestionsOutputState) {
-    super(props);
-
-    this.dictionary = new Dictionary();
-    this.parseValue = this.dictionary.getParseValue();
-  }
-
-  render(): ReactElement {
-    const parsedValue = this.parseValue(this.props.userInput);
-    return (
-      <div className="box">
-        <label htmlFor="out">Out</label>
-        <textarea
-          id="out"
-          value={parsedValue}
-          cols={50} // todo extract
-          rows={3}
-          spellCheck={false}
-          readOnly
-        />
-      </div>
-    );
-  }
-}
+  const parsedValue = parseValue(props.userInput);
+  return (
+    <div className="box">
+      <label htmlFor="out">Out</label>
+      <textarea
+        id="out"
+        name="out"
+        value={parsedValue}
+        cols={50} // todo extract
+        rows={3}
+        spellCheck={false}
+        readOnly
+      />
+    </div>
+  );
+};
 
 interface IMajorSuggestionsState {
   userInput: string;
