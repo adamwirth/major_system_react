@@ -4,8 +4,10 @@ import parser from './Parser';
 import { assertIsDefined } from './Utils';
 import dictionariesHub from './dictionaries/dictionaries';
 
+type Trie = typeof trie;
+
 export type DictionaryType = {
-  [key: string]: undefined | typeof trie | any; // todo "typeof trie" declaration wasnt working
+  [key: string]: ReturnType<Trie>;
 };
 
 class Dictionary {
@@ -25,6 +27,8 @@ class Dictionary {
   // TODO prefix tree for each first character(s)
   // todo I don't love the naming convention I'm currently using on this
   initializeDict(prefix: string): DictionaryType[string] {
+    // todo could try using useMemo (https://www.robinwieruch.de/react-usememo-hook)
+    // -- but what I have is fine I think. I also don't see it making the code much more conscise, sadly
     const lowercasePrefix = prefix.toLowerCase();
     // memoize
     if (this.dictionaries[lowercasePrefix]) {
@@ -33,10 +37,8 @@ class Dictionary {
     const dictionaryArray = dictionariesHub[lowercasePrefix];
     // todo remove eventually, this has helped define some bugs so far though
     assertIsDefined(dictionaryArray);
-    console.debug('after', dictionaryArray);
 
-    this.dictionaries[lowercasePrefix] = trie(dictionaryArray); // todo useMemo stuff?
-    console.debug('after2');
+    this.dictionaries[lowercasePrefix] = trie(dictionaryArray);
 
     return this.dictionaries[lowercasePrefix];
   }
