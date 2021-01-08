@@ -1,86 +1,26 @@
 import React, { ReactElement } from 'react';
 
 import './App.css';
-import Dictionary from './Dictionary';
 
-interface IMajorSuggestionsInputState {
-  userInput: string;
-  onInputChange: (userInput: string) => void;
-}
+import { MajorSuggestionsUserInput } from './elements/UserInput';
+import { MajorSuggestionsOutput } from './elements/Output';
+import { IOptions, OptionsController } from './elements/UniqueOption';
 
-// todo bring to own file
-export class MajorSuggestionsUserInput extends React.Component<IMajorSuggestionsInputState> {
-  constructor(props: IMajorSuggestionsInputState) {
-    super(props);
-    this.changeInput = this.changeInput.bind(this);
-  }
-
-  changeInput(e: React.ChangeEvent<HTMLTextAreaElement>): void {
-    e.preventDefault();
-    this.props.onInputChange(e.target.value);
-  }
-
-  render(): ReactElement {
-    const { userInput } = this.props;
-    return (
-      <div className="box">
-        <label htmlFor="in">In</label>
-        <textarea
-          id="in"
-          name="in"
-          value={userInput}
-          onChange={this.changeInput}
-          cols={50} // todo extract
-          rows={3}
-          spellCheck={false}
-        />
-      </div>
-    );
-  }
-}
-
-interface IMajorSuggestionsOutputState {
+interface IMajorSuggestionsState extends IOptions {
   userInput: string;
 }
 
-// todo bring to own file
-export const MajorSuggestionsOutput = (
-  props: IMajorSuggestionsOutputState,
-): ReactElement => {
-  const dictionary = new Dictionary();
-  const parseValue = dictionary.getParseValue();
+class App extends React.Component {
+  state: IMajorSuggestionsState;
 
-  const parsedValue = parseValue(props.userInput);
-  return (
-    <div className="box">
-      <label htmlFor="out">Out</label>
-      <textarea
-        id="out"
-        name="out"
-        value={parsedValue}
-        cols={50} // todo extract
-        rows={3}
-        spellCheck={false}
-        readOnly
-      />
-    </div>
-  );
-};
-
-interface IMajorSuggestionsState {
-  userInput: string;
-}
-
-class App extends React.Component<
-  Record<string, never>,
-  IMajorSuggestionsState
-> {
-  constructor(props: Record<string, never>) {
+  constructor(props: IMajorSuggestionsState) {
     super(props);
     this.setUserInput = this.setUserInput.bind(this);
+    this.setOptions = this.setOptions.bind(this);
 
     this.state = {
       userInput: '',
+      isUnique: false,
     };
   }
 
@@ -91,15 +31,30 @@ class App extends React.Component<
     });
   }
 
+  // Change inputs for child modules based on options objects passed in
+  // This way I don't have to write more than one changeInput function to pass down
+  setOptions(options: IOptions): void {
+    console.debug('OptionsController#setOptions', options, { ...options });
+    this.setState({ isUnique: options.isUnique }); // todo experiementing, shallow state stuff
+  }
+
   render(): ReactElement {
     return (
       <div>
-        <MajorSuggestionsUserInput
-          userInput={this.state.userInput}
-          onInputChange={this.setUserInput}
-        />
-        <br />
-        <MajorSuggestionsOutput userInput={this.state.userInput} />
+        <div>
+          <MajorSuggestionsUserInput
+            userInput={this.state.userInput}
+            onInputChange={this.setUserInput}
+          />
+          <br />
+          <MajorSuggestionsOutput userInput={this.state.userInput} />
+        </div>
+        <div>
+          <OptionsController
+            options={this.state} // todo could omit userInput
+            onOptionsChange={this.setOptions}
+          />
+        </div>
       </div>
     );
   }
