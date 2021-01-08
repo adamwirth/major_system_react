@@ -28,5 +28,12 @@ module.exports = {
       version: 'detect',
     },
   },
-  rules: {},
+  rules: {
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
+  },
 };
