@@ -1,10 +1,12 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
+import type { ReactElement } from 'react';
 
 import './App.css';
 
 import { MajorSuggestionsUserInput } from './elements/UserInput';
 import { MajorSuggestionsOutput } from './elements/Output';
-import { IOptions, OptionsController } from './elements/UniqueOption';
+import type { IOptions } from './elements/options/OptionsController';
+import { OptionsController } from './elements/options/OptionsController';
 
 interface IMajorSuggestionsState extends IOptions {
   userInput: string;
@@ -40,18 +42,21 @@ class App extends React.Component {
 
   render(): ReactElement {
     return (
-      <div>
+      <div className="flex">
         <div>
           <MajorSuggestionsUserInput
             userInput={this.state.userInput}
             onInputChange={this.setUserInput}
           />
           <br />
-          <MajorSuggestionsOutput userInput={this.state.userInput} />
+          <MajorSuggestionsOutput
+            userInput={this.state.userInput}
+            isUnique={this.state.isUnique} // todo an elegant manner to pass around IOptions object
+          />
         </div>
-        <div>
+        <div className="ml-10">
           <OptionsController
-            options={this.state} // todo could omit userInput
+            options={this.state} // todo should omit userInput
             onOptionsChange={this.setOptions}
           />
         </div>

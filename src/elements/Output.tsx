@@ -1,18 +1,21 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
+import type { ReactElement } from 'react';
+
 import Dictionary from '../Dictionary';
+import type { IOptions } from './options/OptionsController';
 
 export interface IMajorSuggestionsOutputState {
   userInput: string;
 }
 
 export function MajorSuggestionsOutput(
-  props: IMajorSuggestionsOutputState,
+  props: IMajorSuggestionsOutputState & IOptions,
 ): ReactElement {
   const dictionary = new Dictionary();
   const parseValue = dictionary.getParseValue();
 
   // todo create a custom hook that accepts args from props
-  const parsedValue = parseValue(props.userInput);
+  const parsedValue = parseValue(props);
   return (
     <div className="box">
       <label htmlFor="out">Out</label>

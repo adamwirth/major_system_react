@@ -3,6 +3,7 @@ import parser from './Parser';
 
 import { assertIsDefined } from './Utils';
 import dictionariesHub from './dictionaries/dictionaries';
+import type { IOptions } from './elements/options/OptionsController';
 
 type Trie = typeof trie;
 
@@ -10,10 +11,12 @@ export type DictionaryType = {
   [key: string]: ReturnType<Trie>;
 };
 
+export type IOptionsAndUserInput = IOptions & { userInput: string };
+
 class Dictionary {
   dictionaries: DictionaryType;
 
-  parseValue: (input: string) => string;
+  parseValue: (args: IOptionsAndUserInput) => string;
 
   constructor() {
     this.initializeDict = this.initializeDict.bind(this);
@@ -47,7 +50,7 @@ class Dictionary {
     return this.initializeDict(char).getRandomWordWithPrefix(char);
   }
 
-  getParseValue(): (input: string) => string {
+  getParseValue(): Dictionary['parseValue'] {
     return this.parseValue;
   }
 }

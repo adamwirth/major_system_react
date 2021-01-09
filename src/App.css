@@ -9,6 +9,10 @@ body {
   color: white;
 }
 
+.flex {
+  display: flex;
+}
+
 .box {
   min-width: 50vh;
   display: flex;
@@ -24,4 +28,8 @@ body {
   font-family: monospace;
   margin-right: 10px;
   flex: 1 2 0;
+}
+
+.ml-10 {
+  margin-left: 10px;
 }
