@@ -13,7 +13,6 @@ export class MajorSuggestionsUserInput extends React.Component<IMajorSuggestions
   }
 
   changeInput(e: React.ChangeEvent<HTMLTextAreaElement>): void {
-    e.preventDefault();
     this.props.onInputChange(e.target.value);
   }
 
