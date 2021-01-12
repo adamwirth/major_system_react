@@ -33,3 +33,11 @@ body {
 .ml-10 {
   margin-left: 10px;
 }
+
+.box__mt-10 .box:not(:first-child) {
+  margin-top: 10px;
+}
+
+.box__mt-25 .box:not(:first-child) {
+  margin-top: 25px;
+}

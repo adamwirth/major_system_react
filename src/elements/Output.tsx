@@ -3,10 +3,9 @@ import type { ReactElement } from 'react';
 
 import Dictionary from '../Dictionary';
 import type { IOptions } from './options/OptionsController';
+import type { UserInputState } from 'src/App';
 
-export interface IMajorSuggestionsOutputState {
-  userInput: string;
-}
+export type IMajorSuggestionsOutputState = UserInputState;
 
 export function MajorSuggestionsOutput(
   props: IMajorSuggestionsOutputState & IOptions,
@@ -18,10 +17,10 @@ export function MajorSuggestionsOutput(
   const parsedValue = parseValue(props);
   return (
     <div className="box">
-      <label htmlFor="out">Out</label>
+      <label htmlFor="output">Out</label>
       <textarea
-        id="out"
-        name="out"
+        id="output"
+        name="output"
         value={parsedValue}
         cols={50} // todo extract
         rows={3}

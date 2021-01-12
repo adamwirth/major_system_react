@@ -1,35 +1,27 @@
 import React from 'react';
-import type { ReactElement } from 'react';
+import type { ChangeEvent, ReactElement } from 'react';
 
-import type { IOptions } from './OptionsController';
+import type { IOptionsUnique } from './OptionsController';
+import type { MajorSystemEventHandler } from 'src/App';
 
-export interface IUniqueOptionState extends IOptions {
-  readonly onInputChange: (options: IOptions) => void;
-}
+export type UniqueOptionEvent<HTMLInputElement> = ChangeEvent<HTMLInputElement>;
 
-export class UniqueOption extends React.Component<IUniqueOptionState> {
-  constructor(props: IUniqueOptionState) {
-    super(props);
-    this.changeInput = this.changeInput.bind(this);
-  }
+export type IUniqueOptionState = IOptionsUnique & {
+  onInputChange: MajorSystemEventHandler['handleChanges'];
+};
 
-  changeInput(e: React.ChangeEvent<HTMLInputElement>): void {
-    const isUnique = e.target.checked;
-    this.props.onInputChange({ isUnique });
-  }
-
-  render(): ReactElement {
-    return (
-      <div className="box">
-        <label htmlFor="unique">Unique</label>
-        <input
-          id="unique"
-          name="unique"
-          type="checkbox"
-          checked={this.props.isUnique} // todo maybe value, maybe neither
-          onChange={this.changeInput}
-        />
-      </div>
-    );
-  }
+export function UniqueOption(props: IUniqueOptionState): ReactElement {
+  const { isUnique, onInputChange } = props;
+  return (
+    <div className="box">
+      <label htmlFor="isUnique">Unique</label>
+      <input
+        id="isUnique"
+        name="isUnique"
+        type="checkbox"
+        checked={isUnique}
+        onChange={onInputChange}
+      />
+    </div>
+  );
 }

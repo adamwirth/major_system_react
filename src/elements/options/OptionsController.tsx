@@ -2,30 +2,25 @@ import React from 'react';
 import type { ReactElement } from 'react';
 
 import { UniqueOption } from './UniqueOption';
+import { RefreshOption } from './RefreshOption';
+import type { MajorSystemEventHandler } from 'src/App';
 
-export type IOptions = {
-  isUnique: boolean;
-}; // | { otherOption1: type; } | {otherOption2: type; } ...
+export type IOptions = { isUnique: boolean; refreshToggle: boolean };
 
-export interface IOptionsController {
-  options: IOptions;
-  onOptionsChange: (options: IOptions) => void;
-}
+export type IOptionsUnique = Pick<IOptions, 'isUnique'>;
 
-export class OptionsController extends React.Component<IOptionsController> {
-  constructor(props: IOptionsController) {
-    super(props);
-  }
+export type IOptionsRefresh = Pick<IOptions, 'refreshToggle'>;
 
-  render(): ReactElement {
-    const { isUnique } = this.props.options;
-    return (
-      <div className="optionsArea">
-        <UniqueOption
-          isUnique={isUnique}
-          onInputChange={this.props.onOptionsChange}
-        />
-      </div>
-    );
-  }
+export type IOptionsController = IOptions & {
+  changeHandler: MajorSystemEventHandler['handleChanges'];
+};
+
+export function OptionsController(props: IOptionsController): ReactElement {
+  const { changeHandler, isUnique } = props;
+  return (
+    <div className="optionsArea">
+      <UniqueOption isUnique={isUnique} onInputChange={changeHandler} />
+      <RefreshOption onInputChange={changeHandler} />
+    </div>
+  );
 }

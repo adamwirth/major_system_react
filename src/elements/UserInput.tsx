@@ -1,36 +1,32 @@
 import React from 'react';
-import type { ReactElement } from 'react';
+import type { ChangeEvent, ReactElement } from 'react';
 
-export interface IMajorSuggestionsInputState {
-  userInput: string;
-  onInputChange: (userInput: string) => void;
-}
+import type { UserInputState, MajorSystemEventHandler } from 'src/App';
 
-export class MajorSuggestionsUserInput extends React.Component<IMajorSuggestionsInputState> {
-  constructor(props: IMajorSuggestionsInputState) {
-    super(props);
-    this.changeInput = this.changeInput.bind(this);
-  }
+export type MajorSuggestionsUserInputEvent<
+  HTMLTextAreaElement
+> = ChangeEvent<HTMLTextAreaElement>;
 
-  changeInput(e: React.ChangeEvent<HTMLTextAreaElement>): void {
-    this.props.onInputChange(e.target.value);
-  }
+export type IMajorSuggestionsInputState = UserInputState & {
+  changeHandler: MajorSystemEventHandler['handleChanges'];
+};
 
-  render(): ReactElement {
-    const { userInput } = this.props;
-    return (
-      <div className="box">
-        <label htmlFor="in">In</label>
-        <textarea
-          id="in"
-          name="in"
-          value={userInput}
-          onChange={this.changeInput}
-          cols={50} // todo extract
-          rows={3}
-          spellCheck={false}
-        />
-      </div>
-    );
-  }
+export function MajorSuggestionsUserInput(
+  props: IMajorSuggestionsInputState,
+): ReactElement {
+  const { changeHandler, userInput } = props;
+  return (
+    <div className="box">
+      <label htmlFor="userInput">In</label>
+      <textarea
+        id="userInput"
+        name="userInput"
+        value={userInput}
+        onChange={changeHandler}
+        cols={50} // todo extract
+        rows={3}
+        spellCheck={false}
+      />
+    </div>
+  );
 }
