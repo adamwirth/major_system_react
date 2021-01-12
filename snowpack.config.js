@@ -14,6 +14,15 @@ module.exports = {
     // using just terser instead for now. might switch to rollup or webpack if i feel up to the bother
     'snowpack-plugin-terser',
   ],
+  experiments: {
+    optimize: {
+      // bundle: true,
+      // minify: true,
+      // target: 'es2021',
+      preload: true,
+      manifest: true,
+    },
+  },
   install: [
     /* ... */
   ],
