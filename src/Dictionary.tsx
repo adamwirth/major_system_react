@@ -1,7 +1,6 @@
 import trie from 'trie-prefix-tree';
 import parser from './Parser';
 
-import { assertIsDefined } from './Utils';
 import dictionariesHub from './dictionaries/dictionaries';
 import type { IOptions } from './elements/options/OptionsController';
 
@@ -19,7 +18,8 @@ class Dictionary {
   parseValue: (args: IOptionsAndUserInput) => string;
 
   constructor() {
-    this.initializeDict = this.initializeDict.bind(this);
+    this.getDict = this.getDict.bind(this);
+    this.memoizeDict = this.memoizeDict.bind(this);
     this.getWordFromChar = this.getWordFromChar.bind(this);
 
     // todo refactor to use state?
@@ -27,19 +27,22 @@ class Dictionary {
     this.parseValue = parser(this);
   }
 
-  // TODO prefix tree for each first character(s)
   // todo I don't love the naming convention I'm currently using on this
-  initializeDict(prefix: string): DictionaryType[string] {
-    // todo could try using useMemo (https://www.robinwieruch.de/react-usememo-hook)
-    // -- but what I have is fine I think. I also don't see it making the code much more conscise, sadly
+  getDict(prefix: string): DictionaryType[string] {
+    /**While I could try using useMemo (https://www.robinwieruch.de/react-usememo-hook)
+     * -- I don't like that it doesn't guarantee holding on to memoized things (as of this writing) */
     const lowercasePrefix = prefix.toLowerCase();
-    // memoize
+
+    // Return memoized value if the work's already been done
     if (this.dictionaries[lowercasePrefix]) {
       return this.dictionaries[lowercasePrefix];
     }
+
+    return this.memoizeDict(lowercasePrefix);
+  }
+
+  memoizeDict(lowercasePrefix: string): DictionaryType[string] {
     const dictionaryArray = dictionariesHub[lowercasePrefix];
-    // todo remove eventually, this has helped define some bugs so far though
-    assertIsDefined(dictionaryArray);
 
     this.dictionaries[lowercasePrefix] = trie(dictionaryArray);
 
@@ -47,7 +50,7 @@ class Dictionary {
   }
 
   getWordFromChar(char: string): string {
-    return this.initializeDict(char).getRandomWordWithPrefix(char);
+    return this.getDict(char).getRandomWordWithPrefix(char);
   }
 
   getParseValue(): Dictionary['parseValue'] {

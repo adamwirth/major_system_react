@@ -35,8 +35,8 @@ function Parser(
       console.warn(
         'Too many words to not get sluggish (or run out of words, depending on the input). WIP!',
       );
-      /* todo add some sort of ui component to say "sorry, can't be unique", as this will -- even if I increase dictionary sizes --
-       * always be possible */
+      /* todo throw an error here, and catch the error in the parent, displaying something in the dom
+       * reference https://reactjs.org/docs/error-boundaries.html#how-about-event-handlers */
       return false;
     }
     // console.debug('entering needsUniqueWords (for length > 1)');

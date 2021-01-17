@@ -14,7 +14,6 @@ export function MajorSuggestionsOutput(
   const dictionary = new Dictionary();
   const parseValue = dictionary.getParseValue();
 
-  // todo create a custom hook that accepts args from props
   const parsedValue = parseValue(props);
   return (
     <div className="box">
