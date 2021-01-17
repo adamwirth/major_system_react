@@ -1,3 +1,9 @@
+export const CommonTextAreaProperties = {
+  cols: 50,
+  rows: 3,
+  spellCheck: false,
+};
+
 type MajorSystemMappingsType = {
   readonly [key: number]: string[];
 };

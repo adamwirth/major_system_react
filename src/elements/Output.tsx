@@ -4,6 +4,7 @@ import type { ReactElement } from 'react';
 import Dictionary from '../Dictionary';
 import type { IOptions } from './options/OptionsController';
 import type { UserInputState } from 'src/App';
+import { CommonTextAreaProperties } from 'src/Stores';
 
 export type IMajorSuggestionsOutputState = UserInputState;
 
@@ -22,9 +23,7 @@ export function MajorSuggestionsOutput(
         id="output"
         name="output"
         value={parsedValue}
-        cols={50} // todo extract
-        rows={3}
-        spellCheck={false}
+        {...CommonTextAreaProperties}
         readOnly
       />
     </div>

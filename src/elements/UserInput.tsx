@@ -2,6 +2,7 @@ import React from 'react';
 import type { ChangeEvent, ReactElement } from 'react';
 
 import type { UserInputState, MajorSystemEventHandler } from 'src/App';
+import { CommonTextAreaProperties } from 'src/Stores';
 
 export type MajorSuggestionsUserInputEvent<
   HTMLTextAreaElement
@@ -23,9 +24,7 @@ export function MajorSuggestionsUserInput(
         name="userInput"
         value={userInput}
         onChange={changeHandler}
-        cols={50} // todo extract
-        rows={3}
-        spellCheck={false}
+        {...CommonTextAreaProperties}
       />
     </div>
   );
