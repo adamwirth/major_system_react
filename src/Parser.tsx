@@ -26,18 +26,16 @@ function Parser(
    * and their trie lengths. The K dictionary (currently) only has 9 words, so I'd check if there are 7 K values (which is also a
    * bit tricky, since that MajorSystemMappings index is shared with a second element. So we'd check both K & G lengths. Might be good to
    * store these combinations' lengths as a constant somewhere.
+   * @ref https://reactjs.org/docs/error-boundaries.html#how-about-event-handlers
    * @param words - words mapped from elsewhere
    */
   const needsUniqueWords = (words: string[]): boolean => {
     console.debug('Entering needsUniqueWords!');
     if (words.length <= 1) return false;
     if (words.length > 15) {
-      console.warn(
+      throw new Error(
         'Too many words to not get sluggish (or run out of words, depending on the input). WIP!',
       );
-      /* todo throw an error here, and catch the error in the parent, displaying something in the dom
-       * reference https://reactjs.org/docs/error-boundaries.html#how-about-event-handlers */
-      return false;
     }
     // console.debug('entering needsUniqueWords (for length > 1)');
     const seenWords: Record<string, boolean> = {};

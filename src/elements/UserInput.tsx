@@ -2,7 +2,7 @@ import React from 'react';
 import type { ChangeEvent, ReactElement } from 'react';
 
 import type { UserInputState, MajorSystemEventHandler } from 'src/App';
-import { CommonTextAreaProperties } from 'src/Stores';
+import { CommonTextAreaProperties } from '../Stores';
 
 export type MajorSuggestionsUserInputEvent<
   HTMLTextAreaElement

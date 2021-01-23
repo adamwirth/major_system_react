@@ -8,6 +8,7 @@
     "prettier-watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}"
   },
   "dependencies": {
+    "lodash": "^4.17.20",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "trie-prefix-tree": "^1.5.1"
@@ -20,6 +21,7 @@
     "@testing-library/react": "^11.0.0",
     "@testing-library/user-event": "^12.6.0",
     "@types/chai": "^4.2.13",
+    "@types/lodash": "^4.14.168",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/snowpack-env": "^2.3.3",

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { MouseEvent, ReactElement } from 'react';
-import type { MajorSystemEventHandler } from '../../App';
+import type { MajorSystemEventHandler } from 'src/App';
 
 export type RefreshOptionEvent<HTMLInputElement> = MouseEvent<HTMLInputElement>;
 

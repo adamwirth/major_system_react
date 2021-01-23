@@ -4,7 +4,7 @@ import type { ReactElement } from 'react';
 import Dictionary from '../Dictionary';
 import type { IOptions } from './options/OptionsController';
 import type { UserInputState } from 'src/App';
-import { CommonTextAreaProperties } from 'src/Stores';
+import { CommonTextAreaProperties } from '../Stores';
 
 export type IMajorSuggestionsOutputState = UserInputState;
 

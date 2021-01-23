@@ -9,6 +9,7 @@
 - [ ] Feature: save the last 10 outputs internally and display them on the side, in case the user types an extra character by mistake, or sees something they regret not sticking with
 - [ ] Optimize the algorithm that checks for uniqueness, mainly for larger inputs
 - [ ] Probably the last priority would be to prettify the CSS/page layout.
+- [ ] Get webpack tree-shaking in there!
 
 ### completed
 - [x] Get a textarea input to bind user input and pass it to React.
