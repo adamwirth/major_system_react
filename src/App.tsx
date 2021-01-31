@@ -3,6 +3,7 @@ import type { ReactElement } from 'react';
 
 import './App.css';
 
+import ErrorBoundary from './elements/ErrorBoundary';
 import { MajorSuggestionsUserInput } from './elements/UserInput';
 import type { MajorSuggestionsUserInputEvent as UserInputEvent } from './elements/UserInput';
 import { MajorSuggestionsOutput } from './elements/Output';
@@ -12,11 +13,9 @@ import type { UniqueOptionEvent } from './elements/options/UniqueOption';
 import type { RefreshOptionEvent } from './elements/options/RefreshOption';
 
 export type UserInputState = { userInput: string };
-export type ErrorBoundaryState = { hasError: string };
+export type ErrorBoundaryState = { hasError: boolean; error: null | Error };
 
-export type MajorSuggestionsState = IOptions &
-  UserInputState &
-  ErrorBoundaryState;
+export type MajorSuggestionsState = IOptions & UserInputState;
 
 export type PossibleEvents =
   | UniqueOptionEvent<HTMLInputElement>
@@ -36,20 +35,9 @@ class App extends React.Component implements MajorSystemEventHandler {
 
     this.state = {
       userInput: '',
-      hasError: '',
       isUnique: false,
       refreshToggle: false,
     };
-  }
-
-  /**
-   * @desc "Update state so the next render will show the fallback UI.""
-   * @ref https://reactjs.org/docs/react-component.html#static-getderivedstatefromerror */
-  static getDerivedStateFromError(
-    error: Error,
-  ): Partial<MajorSuggestionsState> {
-    console.debug('getDerivedStateFromError', error);
-    return { hasError: error.message };
   }
 
   /* Change inputs for child modules based on options objects passed in
@@ -69,19 +57,18 @@ class App extends React.Component implements MajorSystemEventHandler {
   render(): ReactElement {
     return (
       <div className="flex">
-        {!!this.state.hasError && (
-          <span className="mb-10">Error!!! + {this.state.hasError}</span>
-        )}
         <div className="box__mt-25">
           <MajorSuggestionsUserInput
             userInput={this.state.userInput}
             changeHandler={this.handleChanges}
           />
-          <MajorSuggestionsOutput
-            userInput={this.state.userInput}
-            isUnique={this.state.isUnique}
-            refreshToggle={this.state.refreshToggle}
-          />
+          <ErrorBoundary>
+            <MajorSuggestionsOutput
+              userInput={this.state.userInput}
+              isUnique={this.state.isUnique}
+              refreshToggle={this.state.refreshToggle}
+            />
+          </ErrorBoundary>
         </div>
         <div className="ml-10 box__mt-10">
           <OptionsController

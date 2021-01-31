@@ -1,4 +1,4 @@
-import MajorSystemMappings from './Stores';
+import MajorSystemMappings, { MAX_USER_INPUT_LENGTH } from './Stores';
 import { pickRandomArrayElement } from './Utils';
 import type Dictionary from './Dictionary';
 import type { IOptionsAndUserInput } from './Dictionary';
@@ -32,7 +32,7 @@ function Parser(
   const needsUniqueWords = (words: string[]): boolean => {
     console.debug('Entering needsUniqueWords!');
     if (words.length <= 1) return false;
-    if (words.length > 15) {
+    if (words.length > MAX_USER_INPUT_LENGTH) {
       throw new Error(
         'Too many words to not get sluggish (or run out of words, depending on the input). WIP!',
       );

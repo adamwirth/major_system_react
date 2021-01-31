@@ -21,4 +21,6 @@ const MajorSystemMappings: MajorSystemMappingsType = Object.freeze({
   9: ['P', 'B'],
 });
 
+export const MAX_USER_INPUT_LENGTH = 15;
+
 export default MajorSystemMappings;
